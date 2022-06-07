@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { addDoc, collection, deleteDoc, doc, onSnapshot, query, updateDoc, where } from '@firebase/firestore';
-import { db, auth } from '../firebase';
+import { addDoc, collection, deleteDoc, doc, onSnapshot, query, updateDoc } from '@firebase/firestore';
+import { db } from '../firebase';
 
 Vue.use(Vuex)
 

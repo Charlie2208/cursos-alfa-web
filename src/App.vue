@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <!-- <v-card class=" overflow-hidden" height="150"> -->
-      <v-app-bar color="deep-purple" dark>
+      <v-app-bar color="deep-purple" dark app>
         <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
 
         <v-toolbar-title>Cursos AlfaWeb</v-toolbar-title>
