@@ -1,10 +1,12 @@
 <template>
   <div>
     <v-container>
-      <h1 class="text-center h-1">Administración</h1>
-      <v-btn color="blue darken-1" dark @click="activarAddCurso"
-        >Agregar Curso</v-btn
-      >
+      <v-row wrap>
+        <h1 class="h-1">Administración</h1>
+        <v-btn class="mx-5" color="blue darken-1" dark @click="activarAddCurso"
+          >Agregar Curso</v-btn
+        >
+      </v-row>
     </v-container>
 
     <v-simple-table>
@@ -34,7 +36,7 @@
               <v-icon small class="mr-2" @click="activarUpdate(item)">
                 mdi-pencil
               </v-icon>
-              <v-icon small @click="deleteItem(id)"> mdi-delete </v-icon>
+              <v-icon small @click="deleteItem(item.id)"> mdi-delete </v-icon>
             </td>
           </tr>
         </tbody>
@@ -167,7 +169,7 @@
           <v-btn color="blue darken-1" text @click="closeDelete"
             >Cancelar</v-btn
           >
-          <v-btn color="blue darken-1" text @click="deleteCursoItems(item.id)"
+          <v-btn color="blue darken-1" text @click="deleteCursoItems"
             >Si</v-btn
           >
           <v-spacer></v-spacer>
@@ -220,12 +222,13 @@ export default {
       this.curso = {};
       this.dialogAdd = false;
     },
-    deleteCursoItems(id) {
-      this.delete_curso(id);
+    deleteCursoItems() {
+      this.delete_curso(this.deleteCursoId);
       this.dialogDelete = false;
     },
     deleteItem(id) {
-      this.curso = id;
+        console.log("deleteItem", id)
+      this.deleteCursoId = id;
       this.dialogDelete = true;
     },
     closeDelete() {
@@ -256,24 +259,26 @@ export default {
       return totalInscritos;
     },
     cuposRestantes() {
-      const cuposDisponibles = (190 - this.alumnosInscritos);
+      const cuposDisponibles = 190 - this.alumnosInscritos;
       return cuposDisponibles;
     },
     totalCursos() {
-        return this.cursos.length;
+      return this.cursos.length;
     },
     cursosTerminados() {
-        const terminados = this.cursos.filter(item => item.terminado.toUpperCase() ===
-        "NO")
-        console.log(terminados)
-        return terminados.length
+      const terminados = this.cursos.filter(
+        (item) => item.terminado.toUpperCase() === "NO"
+      );
+      console.log(terminados);
+      return terminados.length;
     },
     cursosActivos() {
-        const terminados = this.cursos.filter(item => item.terminado.toUpperCase() ===
-        "SI")
-        console.log(terminados)
-        return terminados.length
-    }
+      const terminados = this.cursos.filter(
+        (item) => item.terminado.toUpperCase() === "SI"
+      );
+      console.log(terminados);
+      return terminados.length;
+    },
   },
 
   created() {

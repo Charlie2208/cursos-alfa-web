@@ -7,8 +7,8 @@
         <v-toolbar-title>Cursos AlfaWeb</v-toolbar-title>
         <v-spacer></v-spacer>
 
-        <!-- <span class="mr-2">{{this.user.email}}</span> -->
-        <v-btn color="deep-purple" @click="cerrarSesion">
+        <span v-if="user !== null" class="mr-2">{{this.user.email}}</span>
+        <v-btn color="deep-purple" @click="cerrarSesion" v-if="user">
           <v-icon>mdi-logout</v-icon>
         </v-btn>
       </v-app-bar>
@@ -19,26 +19,26 @@
             v-model="group"
             active-class="deep-purple--text text--accent-4"
           >
-            <v-list-item>
+            <v-list-item v-if="user">
               <v-btn to="/">
                 <v-icon>mdi-home</v-icon>
               </v-btn>
               <v-list-item-title>Home</v-list-item-title>
             </v-list-item>
 
-            <v-list-item>
+            <v-list-item v-if="!user">
               <v-btn to="/login">
                 <v-icon>mdi-account</v-icon>
               </v-btn>
               <v-list-item-title>Login</v-list-item-title>
             </v-list-item>
-            <v-list-item>
+            <v-list-item v-if="!user">
               <v-btn to="/register">
                 <v-icon>mdi-account-plus</v-icon>
               </v-btn>
               <v-list-item-title>Registrate</v-list-item-title>
             </v-list-item>
-            <v-list-item>
+            <v-list-item v-if="user">
               <v-btn to="/administracion">
                 <v-icon>mdi-bank-plus</v-icon>
               </v-btn>
