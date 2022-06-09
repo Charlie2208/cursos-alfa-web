@@ -1,235 +1,283 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="cursos"
-    sort-by="calories"
-    class="elevation-1"
-  >
-    <template v-slot:top>
-      <v-toolbar flat>
-        <v-toolbar-title>My CRUD</v-toolbar-title>
-        <v-divider class="mx-4" inset vertical></v-divider>
-        <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="500px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
-              Agregar Curso
-            </v-btn>
-          </template>
-          <v-card>
-            <v-card-title>
-              <span class="text-h5">{{ formTitle }}</span>
-            </v-card-title>
+  <div>
+    <v-container>
+      <h1 class="text-center h-1">Administración</h1>
+      <v-btn color="blue darken-1" dark @click="activarAddCurso"
+        >Agregar Curso</v-btn
+      >
+    </v-container>
 
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="cursos.nombre"
-                      label="Curso"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="cursos.inscritos"
-                      label="Calories"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="cursos.duracion"
-                      label="Fat (g)"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="cursos.costo"
-                      label="Carbs (g)"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="cursos.terminado"
-                      label="Protein (g)"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="cursos.fecha"
-                      label="Protein (g)"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
+    <v-simple-table>
+      <template v-slot:default>
+        <thead>
+          <tr>
+            <th class="text-left">Curso</th>
+            <th class="text-left">Cupos</th>
+            <th class="text-left">Inscritos</th>
+            <th class="text-left">Duración</th>
+            <th class="text-left">Costo</th>
+            <th class="text-left">Terminado</th>
+            <th class="text-left">Fecha</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in cursos" :key="item.id">
+            <td>{{ item.nombre }}</td>
+            <td>{{ item.cupos }}</td>
+            <td>{{ item.inscritos }}</td>
+            <td>{{ item.duracion }}</td>
+            <td>{{ item.costo }}</td>
+            <td>{{ item.terminado }}</td>
+            <td>{{ item.fecha }}</td>
+            <td class="text-center">
+              <v-icon small class="mr-2" @click="activarUpdate(item)">
+                mdi-pencil
+              </v-icon>
+              <v-icon small @click="deleteItem(id)"> mdi-delete </v-icon>
+            </td>
+          </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
+    <v-dialog v-model="dialogAdd">
+      <v-card>
+        <v-card-title class="text-h5"> Agregando Curso </v-card-title>
+        <v-card-text>
+          <v-form>
+            <v-container>
+              <v-row>
+                <v-col cols="12" md="6">
+                  <v-text-field required label="Curso" v-model="curso.nombre" />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field required label="Cupos" v-model="curso.cupos" />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field
+                    required
+                    label="Inscritos"
+                    v-model="curso.inscritos"
+                  />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field
+                    required
+                    label="Duración"
+                    v-model="curso.duracion"
+                  />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field required label="Costo" v-model="curso.costo" />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field
+                    required
+                    label="Terminado"
+                    v-model="curso.terminado"
+                  />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field required label="Fecha" v-model="curso.fecha" />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field required label="Imagen" v-model="curso.src" />
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field
+                    required
+                    label="Descripción"
+                    v-model="curso.descripcion"
+                  />
+                </v-col>
+              </v-row>
+              <v-btn
+                color="green darken-2"
+                class="mr-4"
+                dark
+                @click="addCursoForm"
+                >Agregar Curso</v-btn
+              >
+              <v-btn color="error" class="mr-4" @click="reset">
+                Limpiar Formulario
+              </v-btn>
 
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
-              <v-btn color="blue darken-1" text @click="save"> Save </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="text-h5"
-              >Are you sure you want to delete this item?</v-card-title
-            >
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete"
-                >Cancel</v-btn
+              <v-btn color="warning" @click="reset"> Limpiar Validación </v-btn>
+            </v-container>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialog">
+      <v-card>
+        <v-card-title class="text-h5"> Editar </v-card-title>
+        <v-card-text>
+          <v-form>
+            <v-container>
+              <v-row>
+                <v-col cols="12" sm="6" md="4">
+                  <v-text-field required label="Curso" v-model="curso.nombre" />
+                </v-col>
+                <v-col cols="12" sm="6" md="4">
+                  <v-text-field required label="Cupos" v-model="curso.cupos" />
+                </v-col>
+                <v-col cols="12" sm="6" md="4">
+                  <v-text-field
+                    required
+                    label="Inscritos"
+                    v-model="curso.inscritos"
+                  />
+                </v-col>
+                <v-col cols="12" sm="6" md="4">
+                  <v-text-field
+                    required
+                    label="Duración"
+                    v-model="curso.duracion"
+                  />
+                </v-col>
+                <v-col cols="12" sm="6" md="4">
+                  <v-text-field required label="Costo" v-model="curso.costo" />
+                </v-col>
+                <v-col cols="12" sm="6" md="4">
+                  <v-text-field
+                    required
+                    label="Terminado"
+                    v-model="curso.terminado"
+                  />
+                </v-col>
+                <v-col cols="12" sm="6" md="4">
+                  <v-text-field required label="Fecha" v-model="curso.fecha" />
+                </v-col>
+              </v-row>
+              <v-btn block color="amber darken-2" dark @click="updateCursoForm"
+                >Editar</v-btn
               >
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm"
-                >OK</v-btn
-              >
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-toolbar>
-    </template>
-    <template v-slot:item="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-      <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
-    </template>
-    <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
-    </template>
-  </v-data-table>
+            </v-container>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogDelete" max-width="500px">
+      <v-card>
+        <v-card-title class="text-h5"
+          >Estas seguro de eliminar el curso?</v-card-title
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="closeDelete"
+            >Cancelar</v-btn
+          >
+          <v-btn color="blue darken-1" text @click="deleteCursoItems(item.id)"
+            >Si</v-btn
+          >
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-alert dense outlined color="purple">
+      Cantidad total de alumnos permitidos: 190
+    </v-alert>
+    <v-alert dense outlined color="blue">
+      Cantidad total de alumnos inscritos: {{ alumnosInscritos }}
+    </v-alert>
+    <v-alert dense outlined color="orange">
+      Cantidad total de cupos restantes: {{ cuposRestantes }}
+    </v-alert>
+    <v-alert dense outlined color="pink">
+      Cantidad total de cursos terminados: {{ cursosTerminados }}
+    </v-alert>
+    <v-alert dense outlined color="brown">
+      Cantidad total de cursos activos: {{ cursosActivos }}
+    </v-alert>
+    <v-alert dense outlined color="orange darken-1">
+      Cantidad total de cursos: {{ totalCursos }}
+    </v-alert>
+  </div>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
-
 export default {
-  data: () => ({
-    dialog: false,
-    dialogDelete: false,
-    headers: [
-      {
-        text: "Cursos",
-        align: "start",
-        sortable: false,
-        value: "name",
+  data() {
+    return {
+      curso: {
+        costo: "",
+        cupos: "",
       },
-      { text: "Curso", value: "curso" },
-      { text: "Inscritos", value: "inscritos" },
-      { text: "Duración", value: "duracion" },
-      { text: "Costo", value: "costo" },
-      { text: "Terminado", value: "terminado" },
-      { text: "Fecha", value: "fecha" },
-      { text: "Acciones", value: "actions", sortable: false },
-    ],
-    curso: [],
-    editedIndex: -1,
-    editedItem: {
-      name: "",
-      curso: 0,
-      inscritos: 0,
-      duracion: 0,
-      costo: 0,
-    },
-    defaultItem: {
-      name: "",
-      curso: 0,
-      inscritos: 0,
-      duracion: 0,
-      costo: 0,
-    },
-  }),
-
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
-    },
-    ...mapState(["cursos"]),
+      dialog: false,
+      dialogAdd: false,
+      dialogDelete: false,
+    };
   },
+  methods: {
+    ...mapActions(["add_curso", "delete_curso", "update_curso", "get_cursos"]),
+    activarAddCurso() {
+      this.dialogAdd = true;
+      this.curso = item;
+    },
+    addCursoForm() {
+      this.add_curso({ ...this.curso });
+      this.curso = {};
+      this.dialogAdd = false;
+    },
+    deleteCursoItems(id) {
+      this.delete_curso(id);
+      this.dialogDelete = false;
+    },
+    deleteItem(id) {
+      this.curso = id;
+      this.dialogDelete = true;
+    },
+    closeDelete() {
+      this.dialogDelete = false;
+    },
+    activarUpdate(item) {
+      this.dialog = true;
+      this.curso = item;
+    },
+    updateCursoForm() {
+      this.update_curso({ ...this.curso });
+      this.curso = {};
+      this.dialog = false;
+    },
+    reset() {
+      console.log("reset...");
+      this.$refs.formRegister.reset();
+    },
+  },
+  computed: {
+    ...mapState(["cursos"]),
 
-  watch: {
-    dialog(val) {
-      val || this.close();
+    alumnosInscritos() {
+      const totalInscritos = this.cursos.reduce(
+        (acc, current) => +current.inscritos + acc,
+        0
+      );
+      return totalInscritos;
     },
-    dialogDelete(val) {
-      val || this.closeDelete();
+    cuposRestantes() {
+      const cuposDisponibles = (190 - this.alumnosInscritos);
+      return cuposDisponibles;
     },
+    totalCursos() {
+        return this.cursos.length;
+    },
+    cursosTerminados() {
+        const terminados = this.cursos.filter(item => item.terminado.toUpperCase() ===
+        "NO")
+        console.log(terminados)
+        return terminados.length
+    },
+    cursosActivos() {
+        const terminados = this.cursos.filter(item => item.terminado.toUpperCase() ===
+        "SI")
+        console.log(terminados)
+        return terminados.length
+    }
   },
 
   created() {
-    this.initialize();
     this.get_cursos();
-  },
-
-  methods: {
-    initialize() {
-      this.curso = [
-        {
-          name: "Frozen Yogurt",
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-        },
-        {
-          name: "Ice cream sandwich",
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-        },
-        {
-          name: "Eclair",
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-        },
-      ];
-    },
-    ...mapActions(["get_cursos"]),
-
-    editItem(item) {
-      this.editedIndex = this.cursos.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
-    },
-
-    deleteItem(item) {
-      this.editedIndex = this.cursos.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialogDelete = true;
-    },
-
-    deleteItemConfirm() {
-      this.cursos.splice(this.editedIndex, 1);
-      this.closeDelete();
-    },
-
-    close() {
-      this.dialog = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
-    },
-
-    closeDelete() {
-      this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
-    },
-
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.cursos[this.editedIndex], this.editedItem);
-      } else {
-        this.cursos.push(this.editedItem);
-      }
-      this.close();
-    },
   },
 };
 </script>

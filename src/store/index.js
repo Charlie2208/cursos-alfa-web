@@ -38,10 +38,13 @@ export default new Vuex.Store({
       try {
         await addDoc(collection(db, "cursos",), {
           nombre: curso.nombre,
-          costo: curso.costo,
           cupos: curso.cupos,
+          inscritos: curso.inscritos,
+          duracion: curso.duracion,
+          costo: curso.costo,
           descripcion: curso.descripcion,
           fecha: curso.fecha,
+          terminado: curso.terminado,
           src: curso.src,
         });
       } catch (error) {
@@ -62,10 +65,13 @@ export default new Vuex.Store({
         const docRef = doc(db, "cursos", curso.id);
         await updateDoc(docRef, {
           nombre: curso.nombre,
-          costo: curso.costo,
           cupos: curso.cupos,
+          inscritos: curso.inscritos,
+          duracion: curso.duracion,
+          costo: curso.costo,
           descripcion: curso.descripcion,
           fecha: curso.fecha,
+          terminado: curso.terminado,
           src: curso.src,
         });
       } catch (error) {
