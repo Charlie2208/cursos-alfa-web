@@ -46,7 +46,7 @@
       <v-card>
         <v-card-title class="text-h5"> Agregando Curso </v-card-title>
         <v-card-text>
-          <v-form>
+          <v-form ref="formRegister">
             <v-container>
               <v-row>
                 <v-col cols="12" md="6">
@@ -213,7 +213,7 @@ export default {
     ...mapActions(["add_curso", "delete_curso", "update_curso", "get_cursos"]),
     activarAddCurso() {
       this.dialogAdd = true;
-      this.curso = item;
+    //   this.curso = item;
     },
     addCursoForm() {
       this.add_curso({ ...this.curso });
