@@ -169,15 +169,13 @@
           <v-btn color="blue darken-1" text @click="closeDelete"
             >Cancelar</v-btn
           >
-          <v-btn color="blue darken-1" text @click="deleteCursoItems"
-            >Si</v-btn
-          >
+          <v-btn color="blue darken-1" text @click="deleteCursoItems">Si</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
     </v-dialog>
     <v-alert dense outlined color="purple">
-      Cantidad total de alumnos permitidos: 190
+      Cantidad total de alumnos permitidos: {{ alumnosPermitidos }}
     </v-alert>
     <v-alert dense outlined color="blue">
       Cantidad total de alumnos inscritos: {{ alumnosInscritos }}
@@ -227,7 +225,7 @@ export default {
       this.dialogDelete = false;
     },
     deleteItem(id) {
-        console.log("deleteItem", id)
+      console.log("deleteItem", id);
       this.deleteCursoId = id;
       this.dialogDelete = true;
     },
@@ -250,6 +248,14 @@ export default {
   },
   computed: {
     ...mapState(["cursos"]),
+    
+    alumnosPermitidos() {
+      const totalCupos = this.cursos.reduce(
+        (acc, current) => +current.cupos + acc,
+        0
+      );
+      return totalCupos;
+    },
 
     alumnosInscritos() {
       const totalInscritos = this.cursos.reduce(
